@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  main {
+    @apply min-h-screen;
+  }
+  button[id="import-export"],
+  button[id="example-button"],
+  button[id="reset-button"] {
+    @apply px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center h-12 py-4 px-6 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:outline-none;
+  }
+}
+.wrapper {
+  width: 70%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+video {
+  max-width: 100%;
+}
+
+.wrapper > div {
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+.material-symbols-rounded {
+  font-family: 'Material Symbols Rounded';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+.material-symbols-sharp {
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+#mouseTarget {
+  box-sizing: border-box;
+  width: 15rem;
+  border: 1px solid #f3f4f6;
+}
+
+ul#unorderedList {
+  @apply space-y-2;
+}
+ul#unorderedList li {
+  @apply p-2;
+}
+canvas {
+  border: 1px solid #f3f4f6;
+  width: 560px;
+  height: 360px;
+}
