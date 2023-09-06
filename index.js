@@ -3,6 +3,16 @@ const url = "sintel.mp4";
 const MDI_URL = "https://fonts.google.com/metadata/icons";
 const MOCK_JSON =
   "https://my-json-server.typicode.com/nickburrows/picgo_assets/db";
+const API_URL = "https://open.er-api.com/v6/latest/";
+ 
+// For selecting different controls
+const searchBox = document.querySelector("#searchBox");
+const convertBtn = document.querySelector("#convertBtn");
+const fromCurrecy = document.querySelector("#fromCurrecy");
+const toCurrecy = document.querySelector("#toCurrecy");
+const finalValue = document.querySelector("#finalValue");
+const finalAmount = document.getElementById("finalAmount");
+
 const videoWrapper = document.querySelector(".videoWrapper");
 const downloadBtn = document.querySelector(".download");
 const abortBtn = document.querySelector(".abort");
@@ -16,12 +26,19 @@ const stopFetchBtn = document.querySelector(".stop-fetch");
 const fetchMsg = document.querySelector(".fetch-message");
 const respCode = document.querySelector(".resp-code");
 const respText = document.querySelector(".resp-text");
+const priceInput = document.querySelector("#price-input");
+const changeBtn = document.querySelector("#price-change");
+const testPrice = document.querySelector("#test-price")
 
 let controller;
 let progressAnim;
 let animCount = 0;
 let query = "";
 let icons = null;
+
+let resultFrom = fromCurrecy.value;
+let resultTo = "TWD";
+let searchValue;
 
 downloadBtn.addEventListener("click", fetchVideo);
 
@@ -258,25 +275,119 @@ function drawLine(context, x1, y1, x2, y2) {
   context.closePath();
 }
 
-// import { Modal } from 'flowbite'
-
-const $modalElement = document.querySelector('#modalEl');
-
-const modalOptions = {
-    placement: 'bottom-right',
-    backdrop: 'dynamic',
-    backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40',
-    onHide: () => {
-        console.log('modal is hidden');
-    },
-    onShow: () => {
-        console.log('modal is shown');
-    },
-    onToggle: () => {
-        console.log('modal has been toggled');
-    }
+function PriceChange() {
+  // const ch = priceInput.value
+  const number = 100
+  const jpy = new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }).format(number)
+  testPrice.innerHTML = ch
 }
 
-const modal = new Modal($modalElement, modalOptions);
+// Event when currency is changed
+fromCurrecy.addEventListener('change', (event) => {
+    resultFrom = `${event.target.value}`;
+});
+ 
+console.log(resultFrom)
 
-modal.show();
+// Event when currency is changed
+toCurrecy.addEventListener('change', (event) => {
+  resultTo = `${event.target.value}`;
+});
+ 
+searchBox.addEventListener('input', updateValue);
+ 
+// Function for updating value
+function updateValue(e) {
+    searchValue = e.target.value;
+}
+ 
+// When user clicks, it calls function getresults
+// convertBtn.addEventListener("click", getResults);
+ 
+// Function getresults
+function getResults() {
+  controller = new AbortController();
+  const signal = controller.signal;
+  // const response = await fetch(API_URL, {signal})
+
+  // const body = await response.text();
+  //   const json = JSON.parse(body.replace(/^.+?\n/, ""));
+
+    fetch(API_URL + resultFrom, {signal})
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error, status = ${response.status}`);
+        }
+        const data = response.json()
+        console.log(data)
+        return data
+        })
+        .then(displayResults)
+        .catch(error => {
+          console.log('Error:', error.message);
+        });
+}
+
+
+// Display results after conversion
+function displayResults(currency) {
+    let fromRate = currency.rates[resultFrom];
+    let toRate = currency.rates[resultTo];
+    const jpf = new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' })
+    const enf = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+    const twf = new Intl.NumberFormat('zh-TW', {
+      style: 'currency',
+      currency: 'TWD',
+      maximumFractionDigits: 2,
+      roundingIncrement: 5
+    })
+    const amountNum = ((toRate / fromRate) * searchValue)
+    const twNum = twf.format(amountNum);
+    if (resultFrom === 'JPY') {
+      const jpNum = jpf.format(searchValue)
+      display_text = `${jpNum} = ${twNum}`
+    } else if (resultFrom === 'USD') {
+      const enNum = enf.format(searchValue)
+      display_text = `${enNum} = ${twNum}`
+    } else {
+      display_text = `${searchValue} ${resultFrom} = ${twNum}`
+
+    }
+    finalValue.innerHTML = display_text;
+    finalAmount.style.display = "block";
+}
+ 
+// When user click on reset button
+function clearVal() {
+    window.location.reload();
+    document.getElementsByClassName("finalValue").innerHTML = "";
+};
+
+const selectElem = document.getElementById("select");
+const pElem = document.getElementById("p");
+
+const index = selectElem.selectedIndex;
+
+const arrEl1 = selectElem[index].text
+
+pElem.textContent = `selectedIndex: ${arrEl1}`;
+
+selectElem.addEventListener('change', (event) => {
+  const index = `${event.target.value}`;
+  
+  pElem.textContent = `selectedIndex: ${index}`;
+})
+
+
+const table = document.getElementById("forecast-table");
+const cells = table.getElementsByTagNameNS(
+  "http://www.w3.org/1999/xhtml",
+  "td",
+);
+
+for (const cell of cells) {
+  const axis = cell.getAttribute("axis");
+  if (axis === "year") {
+    // Grab the data
+  }
+}
