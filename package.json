@@ -2,9 +2,9 @@
   "name": "static",
   "version": "1.0.0",
   "description": "This is a static template with no bundling",
-  "main": "index.html",
+  "private": true,
   "scripts": {
-    "start": "webpack serve",
+    "start": "serve dist",
     "dev": "webpack serve",
     "build": "webpack",
     "build:css": "npx tailwindcss -i ./style.css -o ./dist/tailwind.css",
