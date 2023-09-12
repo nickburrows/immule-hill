@@ -1,333 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <main
+      class="min-h-screen max-w-5xl overflow-x-auto p-6 dark:text-gray-100 bg-gradient-radial from-[#23486F] via-[#192532] to-[#10131C]"
+    >
+      <div class="themeSwitch">
+        <button
+          id="theme-toggle"
+          type="button"
+          class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+        >
+          <svg
+            id="theme-toggle-dark-icon"
+            class="hidden w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+            ></path>
+          </svg>
+          <svg
+            id="theme-toggle-light-icon"
+            class="hidden w-5 h-5"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <div class="relative items-center block rounded-lg">
+        <form
+          id="weatherApp"
+          class="relative w-[400px] h-[105px] bg-white dark:bg-slate-800 dark:text-white px-8 py-7 mt-8 rounded-lg overflow-hidden transition ease-out duration-300"
+          method="POST"
+        >
+          <div class="w-full min-h-min flex items-center">
+            <button id="nearMe" class="absolute left-0 ml-4" type="button">
+              <span class="material-symbols-outlined"> near_me </span>
+            </button>
+            <label for="searchInput" class="sr-only">Enter Search City</label>
+            <input
+              id="searchInput"
+              name="cityName"
+              type="text"
+              placeholder="Enter your location"
+              class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-2/3 ml-8 h-full pl-4 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 placeholder:uppercase placeholder:text-slate-400 uppercase placeholder:text-base text-xl"
+            />
+            <button
+              id="searchBtn"
+              type="sumbit"
+              class="absolute right-0 mr-4 inline-flex items-center justify-center rounded-full border bg-[#dff6ff] hover:bg-[#06283d] text-[#06283d] hover:text-white w-12 h-12 transition ease-out duration-400"
+            >
+              <span aria-hidden="true" class="material-symbols-outlined">
+                search
+              </span>
+            </button>
+          </div>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Abort APi example</title>
-  <link rel="stylesheet" href="./dist/tailwind.css" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-</head>
+          <div id="notFound" class="not-found">
+            <p>Oops! Invalid location :/</p>
+          </div>
 
-<body>
-  <main class="text-gray-100 bg-gradient-radial from-[#23486F] via-[#192532] to-[#10131C]">
-    <button id="theme-toggle" type="button"
-      class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
-      <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg">
-        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-      </svg>
-      <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-          d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-          fill-rule="evenodd" clip-rule="evenodd"></path>
-      </svg>
-    </button>
-    <div class="container max-w-xl mx-auto mb-8">
-      <h1 class="heading text-center display-2">
-        Currency Converter
-      </h1>
-      <hr>
-      <div class="main space-y-4">
-        <div class="form-group">
-          <label for="searchBox" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-            Amount to Convert :
-          </label>
-          <input type="text"
-            class="form-control bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="0.00" id="searchBox">
-        </div>
-        <div class="row">
-          <div class="grid grid-cols-2 gap-4">
-            
+          <div id="weatherBox" class="flex-col items-center hidden">
+            <p id="temperature"></p>
+            <p id="description"></p>
+          </div>
 
-            <div class="input-group mb-3">
-              <label for="fromCurrecy" sel2 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From</label>
-              <select
-                class="form-control to bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="fromCurrecy">
-                <option value="USD">USD</option>
-                <option value="JPY" selected>JPY</option>
-                <option value="HKD">HKD</option>
-                <option value="EUR">EUR</option>
-                <option value="ARS">ARS</option>
-                <option value="AUD">AUD</option>
-                <option value="BGN">BGN</option>
-                <option value="CAD">CAD</option>
-                <option value="CHF">CHF</option>
-                <option value="COP">COP</option>
-                <option value="CZK">CZK</option>
-                <option value="DKK">DKK</option>
-                <option value="GBP">GBP</option>
-                <option value="HRK">HRK</option>
-                <option value="HUF">HUF</option>
-                <option value="MXN">MXN</option>
-                <option value="NOK">NOK</option>
-                <option value="NZD">NZD</option>
-                <option value="PLN">PLN</option>
-                <option value="RON">RON</option>
-                <option value="SEK">SEK</option>
-                <option value="ZAR">ZAR</option>
-              </select>
+          <div id="weatherDetails" class="justify-between mt-7 w-full hidden">
+            <div
+              id="humidity"
+              class="flex items-center justify-start pl-5 w-1/2 h-full"
+            >
+              <span id="waterIcon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 475.43 511.81"
+                >
+                  <path
+                    d="M414.9 299.08c-35.19.03-62.73-28.78-60.53-63.42.53-8.4 3.31-16.3 6.29-24.08 13.04-34.03 30.7-65.76 48.82-97.25 5.29-9.2 5.41-9.18 10.62-.12 18.42 32.08 36.45 64.36 49.53 99.11 5.4 14.35 8.18 28.76 3.15 43.89-8.39 25.24-31.19 41.84-57.88 41.86ZM30.83 282.34c-20.74-.23-35.96-20.65-29.2-40.24 6.89-19.97 17.26-38.19 27.63-56.43 1.51-2.66 2.68-2.49 4.09.01 10.5 18.55 21.54 36.89 27.81 57.42 6.14 20.08-9.42 39.84-30.34 39.24ZM83.91 88.03c-14.36.04-24.29-12.9-20.04-26.55 4.14-13.29 11.16-25.25 18.03-37.25 1.41-2.46 2.59-2.03 3.83.17 6.83 12.02 13.97 23.93 17.94 37.28 4.04 13.61-5.68 26.31-19.77 26.35ZM275.46 283.79c-5.23-3.42-6.79-6.99-6.78-12.9.17-69.3.21-138.61.06-207.91-.07-31.8-21.66-56.7-53-61.82-1.44-.24-3.05.09-4.21-1.16h-9c-1.17 1.25-2.78.92-4.22 1.15-12.32 1.95-23.24 6.9-32.54 15.26-15.14 13.61-21.01 30.95-20.97 50.94.13 68.76.04 137.52.07 206.28 0 3.43-.31 6.13-3.74 8.43-42.66 28.57-62.34 68.49-57.58 119.73 4.92 52.9 48.08 98.92 100.34 107.94 3.23.56 6.63.47 9.64 2.09h25.99c1.06-1.04 2.46-.87 3.76-1.04 51.75-6.98 93.4-45.01 105.03-95.93 11.48-50.23-9.47-102.65-52.85-131.04Zm-51.99 206.1c-59.12 8.43-111.02-30.33-119.57-89.29-5.87-40.51 15.27-83.57 51.67-103.07 8.03-4.3 10.21-9.01 10.17-17.65-.35-72.14-.23-144.28-.18-216.41.02-23.22 17.39-41.56 39.87-42.4 23.55-.87 42.9 17.7 43.02 41.76.18 37.15.05 74.3.05 111.46 0 37.15.08 74.3-.09 111.46-.02 4.39 1.23 6.78 5.24 8.9 31.92 16.86 50.82 43.15 56.28 78.95 8.3 54.39-31.93 108.52-86.47 116.3Z"
+                  />
+                  <path
+                    d="M225.43 230.76c0 31.98.08 63.97-.09 95.95-.02 4.51 1.1 6.98 5.51 9.09 23.48 11.2 35.57 37.12 29.48 62.15-6.25 25.73-29.01 42.73-56.08 41.89-24.91-.77-46.39-19.58-51.2-44.84-4.55-23.9 7.65-48.63 29.73-58.92 4.87-2.27 5.92-4.99 5.91-9.84-.13-64.13-.1-128.26-.08-192.4 0-10.56 5.05-17.69 13.94-19.96 11.76-3.01 22.64 5.61 22.8 18.44.21 16.99.06 33.98.06 50.97v47.47Z"
+                  />
+                </svg>
+              </span>
+              <div class="text">
+                <span id="humidityText"></span>
+                <p>Humidity</p>
+              </div>
             </div>
-
-            <div class="input-group mb-3">
-              <label for="toCurrecy" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">To</label>
-              <select
-                class="form-control from bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                id="toCurrecy">
-                <option value="USD">USD</option>
-                <option value="JPY">JPY</option>
-                <option value="TWD" selected>TWD</option>
-              </select>
+            <div
+              id="wind"
+              class="flex items-center justify-end pr-5 w-1/2 h-full"
+            >
+              <span id="windIcon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    stroke="none"
+                    d="M156.7 256H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h142.2c15.9 0 30.8 10.9 33.4 26.6 3.3 20-12.1 37.4-31.6 37.4-14.1 0-26.1-9.2-30.4-21.9-2.1-6.3-8.6-10.1-15.2-10.1H81.6c-9.8 0-17.7 8.8-15.9 18.4 8.6 44.1 47.6 77.6 94.2 77.6 57.1 0 102.7-50.1 95.2-108.6C249 291 205.4 256 156.7 256zM16 224h336c59.7 0 106.8-54.8 93.8-116.7-7.6-36.2-36.9-65.5-73.1-73.1-55.4-11.6-105.1 24.9-114.9 75.5-1.9 9.6 6.1 18.3 15.8 18.3h32.8c6.7 0 13.1-3.8 15.2-10.1C325.9 105.2 337.9 96 352 96c19.4 0 34.9 17.4 31.6 37.4-2.6 15.7-17.4 26.6-33.4 26.6H16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16zm384 32H243.7c19.3 16.6 33.2 38.8 39.8 64H400c26.5 0 48 21.5 48 48s-21.5 48-48 48c-17.9 0-33.3-9.9-41.6-24.4-2.9-5-8.7-7.6-14.5-7.6h-33.8c-10.9 0-19 10.8-15.3 21.1 17.8 50.6 70.5 84.8 129.4 72.3 41.2-8.7 75.1-41.6 84.7-82.7C526 321.5 470.5 256 400 256z"
+                  />
+                </svg>
+              </span>
+              <div class="text">
+                <span id="windText"></span>
+                <p>Wind Speed</p>
+              </div>
             </div>
           </div>
-          <p id="p">selectedIndex: 0</p>
-          <select id="select" class="form-control from bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-            <option>Option A</option>
-            <option>Option B</option>
-            <option selected>Option C</option>
-            <option>Option D</option>
-            <option>Option E</option>
-          </select>
-          <table id="forecast-table""></table>
-        </div>
-
-        <div class="text-center">
-
-          <!-- convert button -->
-          <button class="btn btn-default m-2" id="convertBtn" type="button" onclick="getResults()">
-            Convert
-          </button>
-          <!-- reset button -->
-          <button class="btn btn-red m-2" onclick="clearVal()">
-            Reset
-          </button>
-        </div>
-
-      </div>
-
-      <div id="finalAmount" class="text-center">
-
-        <!-- Display the converted amount -->
-        <h2>Converted Amount :
-          <span id="finalValue" style="color:green;">
-          </span>
-        </h2>
-      </div>
-    </div>
-    <div claa="container">
-      <div class="flex flex-wrap">
-        <button type="button" class="btn btn-default">Default</button>
-        <button type="button" class="btn btn-primary">Primary</button>
-        <button type="button" class="btn btn-dark">Dark</button>
-        <button type="button" class="btn btn-light">Light</button>
-        <button type="button" class="btn btn-green">Green</button>
-        <button type="button" class="btn btn-red">Red</button>
-        <button type="button" class="btn btn-yellow">Yellow</button>
-        <button type="button" class="btn btn-purple">Purple</button>
-      </div>
-      <div class="currency-converter max-w-xl mx-auto">
-        <div class="currency-test mx-auto">
-          <label for="price-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
-          <input id="price-input" name="price-input" type="number"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></input>
-        </div>
-        <p id="test-price"></p>
-        <button id="price-change" onclick="PriceChange()"
-          class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-      </div>
-
-
-      This is some HTML:
-      <div id="d1">Hello world</div>
-      <!-- Example of comment -->
-      Text <span>Text</span> Text<br />
-      <svg height="20" width="20">
-        <circle cx="10" cy="10" r="5" stroke="black" stroke-width="1" fill="red" />
-      </svg>
-      <hr />
-      <output id="result">Not calculated yet.</output>
-      <span class="material-symbols-outlined">face</span>
-      <span class="material-symbols-rounded">face</span>
-      <span class="material-symbols-sharp">face</span>
-      <div class="flex flex-col items-center mx-auto">
-        <h1>Drawing with mouse events</h1>
-        <canvas id="myPics" width="560" height="360"></canvas>
-
-        <div class="mx-auto my-6" id="mouseTarget">
-          <ul id="unorderedList">
-            <li>No events yet!</li>
-          </ul>
+        </form>
+        <div
+          id="status1"
+          class="absolute inset-0 rounded-lg bg-gray-700/60 hidden"
+        ></div>
+        <div
+          id="status2"
+          role="status"
+          class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2 hidden"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+            viewBox="0 0 100 101"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+              fill="currentColor"
+            />
+            <path
+              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+              fill="currentFill"
+            />
+          </svg>
+          <span class="sr-only">Loading...</span>
         </div>
       </div>
-    </div>
-    <div class="my-6 mx-auto text-center">
-      <h2 class="text-2xl mb-6">Toastify</h2>
-      <button type="button" id="import-export" class="btn btn-default">
-        Importar / exportar
-      </button>
-      <button type="button" id="example-button" class="btn btn-default">
-        You have not clicked this button.
-      </button>
-      <button type="button" id="reset-button" class="btn btn-default">
-        Click this button to reset the first button.
-      </button>
-      <button type="button" id="toastify-btn"
-        class="mx-auto my-8 flex items-center justify-center px-4 py-2 text-base font-medium leading-6 text-gray-500 whitespace-no-wrap bg-white border-2 border-transparent rounded-full shadow-sm hover:bg-transparent hover:text-white hover:border-white focus:outline-none">
-        Click to show
-      </button>
-
-      <div id="toast-simple"
-        class="fixed top-5 right-5 flex items-center w-full max-w-xs p-4 space-x-4 text-gray-500 bg-white divide-x divide-gray-200 rounded-lg shadow dark:text-gray-400 dark:divide-gray-700 space-x dark:bg-gray-800"
-        role="alert">
-        <svg class="w-5 h-5 text-blue-600 dark:text-blue-500 rotate-45" aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 20">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="m9 17 8 2L9 1 1 19l8-2Zm0 0V9" />
-        </svg>
-        <div class="pl-4 text-sm font-normal">Message sent successfully.</div>
+      <div class="block my-8">
+        <button id="find-me" class="btn btn-primary">Show my location</button
+        ><br />
+        <p id="status"></p>
+        <a id="map-link" target="_blank"></a>
       </div>
-
-      <div id="tooltips-target">Tooltips Target I</div>
-      <div id="another-target">Tooltips Target II</div>
-      <a class="font-medium text-yellow-600 dark:text-yellow-500 dark:hover:text-yellow-400 hover:underline"
-        href="https://flowbite.com/" data-tooltip-target="tooltip-default">Flowbite</a>
-      <a class="text-teal-400 transition duration-150 ease-in-out hover:text-teal-600 focus:text-teal-600 active:text-teal-700 dark:text-teal-400 dark:hover:text-teal-500 dark:focus:text-teal-500 dark:active:text-teal-600"
-        href="https://developer.mozilla.org/en-US/docs/Web/API/clearTimeout#examples" data-tooltip-target="tooltip-test"
-        data-tooltip-placement="bottom"><code>clearTimeout()</code>
-        example</a>
-      <a class="text-blue-400 hover:underline" href="http://www.sintel.org/">www.sintel.org</a>
-      <div id="tooltip-default" role="tooltip"
-        class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-        Tooltip content
-        <div class="tooltip-arrow" data-popper-arrow></div>
-      </div>
-      <div id="log">
-        <h3>Content:</h3>
-      </div>
-    </div>
-    <div class="wrapper mt-8">
-      <h1>Simple offline video player</h1>
-      <div class="controls">
-        <button class="download btn">Download video</button>
-        <button class="abort btn hidden">Cancel download</button>
-        <p class="reports"></p>
-      </div>
-      <div class="videoWrapper hidden">
-        <p>
-          Sintel © copyright Blender Foundation |
-          <a href="http://www.sintel.org/">www.sintel.org</a>.
-        </p>
-      </div>
-      <div class="fetchIcons">
-        <h2>fetch Material icons</h2>
-        <input type="text" name="search-input" id="search-input"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-        <button type="button" class="access btn" onclick="{Access()}">
-          Access
-        </button>
-        <div class="innerTest"></div>
-        <div class="action-buttons">
-          <button type="button"
-            class="fetch inline-flex items-center justify-center h-12 py-4 px-6 font-medium tracking-wide text-white transition duration-200 bg-gray-900 rounded-lg hover:bg-gray-800 focus:shadow-outline focus:outline-none">Start
-            fetch</button>
-          <button type="button" class="stop-fetch btn hidden">Stop fetch</button>
-        </div>
-        <p class="fetch-message"></p>
-        <div class="fetch-result hidden">
-          <pre>
-                <code class="resp-code"></code>
-            </pre>
-          <div class="resp-text"></div>
-        </div>
-      </div>
-    </div>
-    <div id="tooltip-test" role="tooltip"
-      class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-      Tooltip content
-      <div class="tooltip-arrow" data-popper-arrow></div>
-    </div>
-
-  </main>
-  <script>
-    // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-
-    var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-
-    // Change the icons inside the button based on previous settings
-    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      themeToggleLightIcon.classList.remove('hidden');
-    } else {
-      themeToggleDarkIcon.classList.remove('hidden');
-    }
-
-    var themeToggleBtn = document.getElementById('theme-toggle');
-
-    themeToggleBtn.addEventListener('click', function () {
-
-      // toggle icons inside button
-      themeToggleDarkIcon.classList.toggle('hidden');
-      themeToggleLightIcon.classList.toggle('hidden');
-
-      // if set via local storage previously
-      if (localStorage.getItem('color-theme')) {
-        if (localStorage.getItem('color-theme') === 'light') {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('color-theme', 'dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('color-theme', 'light');
-        }
-
-        // if NOT set via local storage previously
-      } else {
-        if (document.documentElement.classList.contains('dark')) {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('color-theme', 'light');
-        } else {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('color-theme', 'dark');
-        }
-      }
-
-    });
-
-    var $log = $("#log"),
-      str = "hello, <b>my name is</b> jQuery.",
-      html = $.parseHTML(str),
-      nodeNames = [];
-
-    // Append the parsed HTML
-    $log.append(html);
-
-    // Gather the parsed HTML's node names
-    $.each(html, function (i, el) {
-      nodeNames[i] = "<li>" + el.nodeName + "</li>";
-    });
-
-    // Insert the node names
-    $log.append("<h3>Node Names:</h3>");
-    $("<ol></ol>")
-      .append(nodeNames.join(""))
-      .appendTo($log);
-  </script>
-  <script src="index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-</body>
-
+    </main>
+  </body>
 </html>

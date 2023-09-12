@@ -1,0 +1,87 @@
+.text-primary {
+  color: #2525b1;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #06283d;
+}
+
+#weatherBox img {
+  width: 60%;
+  margin-top: 30px;
+}
+
+#weatherBox #temperature {
+  @apply relative text-[06283d] dark:text-teal-200 text-7xl font-extrabold mt-8 -ml-4;
+}
+
+#weatherBox #temperature span {
+  position: absolute;
+  margin-left: 4px;
+  font-size: 1.5rem;
+}
+
+#weatherBox #description {
+  @apply text-[06283d] dark:text-teal-200 text-xl font-medium capitalize;
+}
+#waterIcon,
+#windIcon {
+  /* font-size: 26px; */
+  margin-right: 10px;
+  margin-top: 6px;
+}
+#waterIcon svg,
+#windIcon svg {
+  @apply fill-[#06283d] dark:fill-teal-200 w-[50px] h-auto;
+}
+
+#windText,
+#humidityText {
+  @apply text-[#06283d] dark:text-teal-200 text-xl font-medium;
+}
+
+#weatherDetails p {
+  @apply text-[#06283d] dark:text-teal-200 text-sm font-medium;
+}
+
+#notFound {
+  @apply w-full text-center mt-12 hidden;
+}
+
+#notFound img {
+  width: 70%;
+}
+
+#notFound p {
+  @apply text-[06283d] dark:text-teal-200 text-xl font-medium mt-3;
+}
+
+#weatherBox,
+#weatherDetails {
+  scale: 0;
+  opacity: 0;
+}
+
+.fadeIn {
+  animation: 0.5s fadeIn forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeIn {
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}
